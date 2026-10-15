@@ -1,7 +1,4 @@
-import { IsNotEmpty } from "class-validator/types/decorator/common/IsNotEmpty.js";
-import { Max } from "class-validator/types/decorator/number/Max.js";
-import { Min } from "class-validator/types/decorator/number/Min.js";
-import { IsEmail } from "class-validator/types/decorator/string/IsEmail.js";
+import { IsNotEmpty , Min,Max,IsEmail} from "class-validator";
 
 export class RegisterDto {
     @IsNotEmpty({message: "Username harus diisi"})
