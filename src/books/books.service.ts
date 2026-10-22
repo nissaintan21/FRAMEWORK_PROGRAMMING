@@ -1,41 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Book } from './entities/book-entity.js';
 import { CreateBookDto } from './dto/create-book.dto.js';
 
 @Injectable()
 export class BooksService {
-    private books: Book[] = [
-        {id:1,
-        title: 'The Great Gatsby',
-        author: 'F. Scott Fitzgerald',
-        isbn: '9780743273565',
-        publishedYear: 1925,
-        isAvailable: true
-        }
-    ]
-    //mencari semua databuku
-    findAll(): Book[]{
-        return this.books;
-    }
+  constructor(
+    @InjectRepository(Book)
+    private readonly bookRepository: Repository<Book>,
+  ) {}
 
-    //menambahkan data buku baru
-    create(book:CreateBookDto): Book{
-        const newBook: Book = {
-            id: this.books.length + 1,
-            title: book.title,
-            author: book.author,
-            isbn: book.isbn,
-            publishedYear: book.publishedYear,
-            isAvailable: true
-        };
-        this.books.push(newBook);
-        return newBook;
-    }
+  // Mencari semua data buku dari database
+  async findAll(): Promise<Book[]> {
+    return await this.bookRepository.find();
+  }
 
-    findById(id: string): Book | undefined {
-  return this.books.find(book => book.id === Number(id));
-}
+  // Menambahkan data buku baru ke database
+  async create(createBookDto: CreateBookDto): Promise<Book> {
+    const newBook = this.bookRepository.create(createBookDto);
+    return await this.bookRepository.save(newBook);
+  }
 
-
-    
+  // Mencari buku berdasarkan ID dari database
+  async findById(id: number): Promise<Book | null> {
+    return await this.bookRepository.findOneBy({ id });
+  }
 }
