@@ -7,17 +7,16 @@ export class LogMiddlewareMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     const { method, originalUrl, ip } = req;
-    const userAgent = req.get('user agent') || '';
+    const userAgent = req.get('user-agent') || '';
     const startTime = Date.now();
 
-    res.on('Finish', () => {
+    res.on('finish', () => {
       const { statusCode } = res;
       const contentLength = res.get('content-length');
       const responseTime = Date.now() - startTime;
 
       this.logger.log(
-        `${method} ${originalUrl} ${statusCode} ${contentLength || 0}
-        - ${userAgent} ${ip} - ${responseTime}ms`,
+        `${method} ${originalUrl} ${statusCode} ${contentLength || 0} - ${userAgent} ${ip} - ${responseTime}ms`,
       );
     });
     next();
