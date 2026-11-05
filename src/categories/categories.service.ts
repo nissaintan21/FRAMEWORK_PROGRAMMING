@@ -10,7 +10,7 @@ export class CategoriesService {
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
   ) {}
-
+ // mencari semua data kategori
   async findAll(): Promise<Category[]> {
     return await this.categoryRepository.find();
   }
